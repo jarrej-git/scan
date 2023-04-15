@@ -24,9 +24,14 @@ def scan_drive(drive):
     file_sizes = []
     for root, dirs, files in os.walk(drive):
         for file in files:
-            # ignore zipped or compressed files
-            if not zipfile.is_zipfile(os.path.join(root, file)):
-                file_path = os.path.join(root, file)
+            file_path = os.path.join(root, file)
+            if zipfile.is_zipfile(file_path):
+                # ignore files inside zip/compressed files
+                with zipfile.ZipFile(file_path, 'r') as zip_file:
+                    for zip_info in zip_file.infolist():
+                        if not zip_info.is_dir():
+                            file_sizes.append((file_path + "/" + zip_info.filename, zip_info.file_size))
+            else:
                 file_size = os.path.getsize(file_path)
                 file_sizes.append((file_path, file_size))
 
