@@ -1,6 +1,5 @@
 #edited jj import pretty table
 import os
-import first
 import zipfile
 import datetime
 from prettytable import PrettyTable
